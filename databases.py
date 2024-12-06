@@ -4,6 +4,7 @@ import os
 class Database():
     database:list = []
     feilds:list = []
+    filepath:str
     def __init__(self, filepath:str, feilds:list):
         with open(os.path.dirname(os.path.realpath(__file__))+'/'+filepath, "r") as file:
             reader = csv.DictReader(file)
@@ -11,9 +12,13 @@ class Database():
                 self.database.append(line)
 
         self.feilds = feilds
+        self.filepath = filepath
 
     def __del__(self):
-        pass
+        with open(os.path.dirname(os.path.realpath(__file__))+'/'+self.filepath, "w") as file:
+            writer = csv.DictWriter(file, fieldnames=self.fields)
+            writer.writeheader()
+            writer.writerows(self.database)
 
     def __str__(self):
         text = ""
@@ -33,7 +38,7 @@ class Database():
     def edit(self):
         pass
 
-stock = Database("stock.csv",[])
+stock = Database("stock.csv",["Item","Category","Price"])
 customers = Database("customers.csv",[])
 
 
