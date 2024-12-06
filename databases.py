@@ -1,9 +1,16 @@
 import csv
+import os
 
 class Database():
-  database:dict
+  database:list
+  feilds:list
   def __init__(self, filepath:str, feilds:list):
-    pass
+      with open(os.path.dirname(os.path.realpath(__file__))+'/'+filepath, "r") as file:
+          reader = csv.DictReader(file)
+              for line in reader:
+                  self.database.append(line)
+
+      self.feilds = feilds
 
   def __del__(self):
     pass
