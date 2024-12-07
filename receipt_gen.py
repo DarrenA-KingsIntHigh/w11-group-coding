@@ -1,5 +1,11 @@
 # Simple login system for customers and staff
 
+# Darren - just a heads up I saw you copied a lot of code from your accounts.py program
+# so I just wanted to let you know in case you didn't that you can do
+# import accounts
+# to include the code from that in here kind of like header files in C or C++
+# but since all the program needs to generate a receipt and calculate the discount is the items ordered it probably doesn't need access to accounts
+
 # Customer login details (3 customers)
 # User names are John, Jane, and Alice with all passwords being "password"
 customers = {
