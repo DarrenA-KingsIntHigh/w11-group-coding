@@ -6,6 +6,9 @@
 # to include the code from that in here kind of like header files in C or C++
 # but since all the program needs to generate a receipt and calculate the discount is the items ordered it probably doesn't need access to accounts
 
+# EDIT: I just saw your commit message. I was thinking we'd use a more modular approach where each file contains a separate "module/idependant part/whatever" \n
+# of the program and we just use import to include them in the parts that need them but I'm also totally down for going this approach I'd just want to discuss it first to make sure everyone's on the same page
+
 # Customer login details (3 customers)
 # User names are John, Jane, and Alice with all passwords being "password"
 customers = {
