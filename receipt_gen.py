@@ -1,14 +1,5 @@
 # Simple login system for customers and staff
 
-# Darren - just a heads up I saw you copied a lot of code from your accounts.py program
-# so I just wanted to let you know in case you didn't that you can do
-# import accounts
-# to include the code from that in here kind of like header files in C or C++
-# but since all the program needs to generate a receipt and calculate the discount is the items ordered it probably doesn't need access to accounts
-
-# EDIT: I just saw your commit message. I was thinking we'd use a more modular approach where each file contains a separate "module/idependant part/whatever" \n
-# of the program and we just use import to include them in the parts that need them but I'm also totally down for going this approach I'd just want to discuss it first to make sure everyone's on the same page
-
 # Customer login details (3 customers)
 # User names are John, Jane, and Alice with all passwords being "password"
 customers = {
@@ -20,8 +11,8 @@ customers = {
 # Staff login details (shared for all staff)
 staff = {'username': 'staff_user', 'password': 'staffpassword'}
 
-# Sample menu items
-menu = {
+# Sample product items (replacing menu)
+products = {
     'Brio Train Set': 119.0,
     'Paw Patrol Tower': 159.0,
     'Safari Animal Mobile': 30.0,
@@ -30,11 +21,11 @@ menu = {
 
 # Function to generate a receipt for the customer's order and save to a text file
 def generate_receipt(order_items):
-    total = sum(order_items.values())
+    total = sum(order_items[item]['total_price'] for item in order_items)
     receipt_content = "--- Receipt ---\n"
     
-    for item, price in order_items.items():
-        receipt_content += f"{item}: ${price}\n"
+    for item, details in order_items.items():
+        receipt_content += f"{item} (x{details['quantity']}): ${details['total_price']:.2f}\n"
     
     receipt_content += "----------------\n"
     receipt_content += f"Total: ${total:.2f}\n"
@@ -50,23 +41,33 @@ def generate_receipt(order_items):
 
 def place_order(username):
     print("\nWelcome to the Order System!")
-    print("Menu:")
-    for item, price in menu.items():
+    print("Products:")
+    for item, price in products.items():
         print(f"{item}: ${price}")
 
     order_items = {}  # Dictionary to store customer's order
 
     while True:
-        item = input("\nEnter the item you want to order (or type 'done' to finish): ").title()
+        item = input("\nEnter the product you want to order (or type 'done' to finish): ").title()
 
         if item == 'Done':
             break
 
-        if item in menu:
+        if item in products:
             quantity = int(input(f"How many {item}s would you like to order? "))
-            order_items[item] = menu[item] * quantity
+            
+            # If the item is already in the order, update the quantity and total price
+            if item in order_items:
+                order_items[item]['quantity'] += quantity
+                order_items[item]['total_price'] = order_items[item]['quantity'] * products[item]
+            else:
+                # Add the new item to the order
+                order_items[item] = {
+                    'quantity': quantity,
+                    'total_price': products[item] * quantity
+                }
         else:
-            print(f"Sorry, we don't have {item} on the menu. Please choose from the list.")
+            print(f"Sorry, we don't have {item} in our product list. Please choose from the list.")
 
     # Generate and save the receipt
     generate_receipt(order_items)
