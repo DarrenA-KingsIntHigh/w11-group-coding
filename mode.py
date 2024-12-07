@@ -1,5 +1,27 @@
 # a lot of this functionality is implemented in database.py. If you want to take a look in there I've left some comments for documentation
 import databases # should import it unless there is another python module called databases I don't know about
+import os
+
+def customer(account:dict):
+    running = True
+    while running:
+        os.system('cls')
+        print(f"Welcome {account['name']} -------------------------------------------------------------------------------------")
+        action = input("Please select an action: display the catalogue(c), search(s), quit(q)\n: ").casefold()
+
+        if action == 'q': running = False; continue
+        elif action == 'c': print(databases.stock); input("Press ENTER: "); continue
+        elif action == 's':
+            stype = input("what type of search would you like to make: name(n), category(c)\n: ").casefold()
+            search = input("Please enter your search: ")
+            if stype == 'n': field = "Item"
+            elif stype == 'c': field = "Category"
+            else: input("Unrecognized search tye: "); continue
+            result = databases.stock.search(field, search)
+            for item in result:
+                print(item["Item"],item["Category"],f"£{item['Price']}", sep=", ")
+            input("Press ENTER: "); continue
+        else: input("Unrecognized action: "); continue
 
 class ToyStore:
     def __init__(self):
@@ -64,33 +86,35 @@ class ToyStore:
         return receipt
 
 
-# Program Workflow
-store = ToyStore()
+if __name__ == "__main__":
+    customer({"name":"Jhon"})
+    # Program Workflow
+    store = ToyStore()
 
-# Adding stock items
-store.add_stock_item("Brio Train Set", "Toys", 119)
-store.add_stock_item("Paw Patrol Tower", "Toys", 159)
-store.add_stock_item("Safari Animal Mobile", "Nursery", 30)
-store.add_stock_item("Chicco Crib", "Nursery", 199)
+    # Adding stock items
+    store.add_stock_item("Brio Train Set", "Toys", 119)
+    store.add_stock_item("Paw Patrol Tower", "Toys", 159)
+    store.add_stock_item("Safari Animal Mobile", "Nursery", 30)
+    store.add_stock_item("Chicco Crib", "Nursery", 199)
 
-# Display all stock
-print("All Stock:")
-for item in store.get_all_stock():
-    print(f"ID: {item['id']}, Name: {item['name']}, Category: {item['category']}, Price: ${item['price']}")
+    # Display all stock
+    print("All Stock:")
+    for item in store.get_all_stock():
+        print(f"ID: {item['id']}, Name: {item['name']}, Category: {item['category']}, Price: ${item['price']}")
 
-# Search for an item
-print("\nSearch Results for 'Toys':")
-for item in store.search_stock("Toys"):
-    print(f"ID: {item['id']}, Name: {item['name']}, Price: ${item['price']}")
+    # Search for an item
+    print("\nSearch Results for 'Toys':")
+    for item in store.search_stock("Toys"):
+        print(f"ID: {item['id']}, Name: {item['name']}, Price: ${item['price']}")
 
-# Save a customer
-store.save_customer("Alice Smith", "alice@example.com", ["Brio Train Set", "Paw Patrol Tower"])
+    # Save a customer
+    store.save_customer("Alice Smith", "alice@example.com", ["Brio Train Set", "Paw Patrol Tower"])
 
-# Generate a receipt
-purchased_items = [
-    {"name": "Brio Train Set", "category": "Toys", "price": 119},
-    {"name": "Safari Animal Mobile", "category": "Nursery", "price": 30},
-    {"name": "Chicco Crib", "category": "Nursery", "price": 199}
-]
-print("\nReceipt:")
-print(store.generate_receipt(purchased_items))
+    # Generate a receipt
+    purchased_items = [
+        {"name": "Brio Train Set", "category": "Toys", "price": 119},
+        {"name": "Safari Animal Mobile", "category": "Nursery", "price": 30},
+        {"name": "Chicco Crib", "category": "Nursery", "price": 199}
+    ]
+    print("\nReceipt:")
+    print(store.generate_receipt(purchased_items))

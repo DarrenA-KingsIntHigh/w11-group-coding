@@ -3,11 +3,12 @@ import csv
 import os
 
 class Database():
-    def __init__(self, filepath:str) -> None:
+    def __init__(self, filepath:str, formatting:dict[dict] = None) -> None:
         # member variables of class // self note: DO NOT move out of __init__
         self.filepath = os.path.dirname(os.path.realpath(__file__))+'/'+filepath # sets the file path relative to the directory the program is in
         self.database:list[dict] = [] # a list of items in the database
         self.fields:list[str] = [] # fields for said list
+        self.formatting = formatting
 
         # loads the database via the csv dict reader
         with open(self.filepath, "r") as file:
@@ -35,7 +36,14 @@ class Database():
         text = ""
         for line in self.database:
             for key in self.fields:
-                text += str(line[key])+", "
+                prefix = ''
+                suffix = ''
+                if self.formatting != None:
+                    for fkey in self.formatting.keys():
+                        if fkey == key:
+                            prefix = self.formatting[fkey]["prefix"]
+                            suffix = self.formatting[fkey]["suffix"]
+                text += prefix+str(line[key])+suffix+", "
             text = text[:-2]+'\n'
         return text
 
@@ -75,7 +83,7 @@ class Database():
         if not found: raise KeyError("item could not be found")
 
 # stock and customer database init for later use in other parts of program
-stock = Database("stock.csv")
+stock = Database("stock.csv", {"Price":{"prefix":"£", "suffix":""}})
 customers = Database("customers.csv")
 
 
