@@ -14,7 +14,12 @@ class Database():
             reader = csv.DictReader(file)
             for line in reader:
                 self.database.append(line)
-                self.database[-1]["Price"] = int(self.database[-1]["Price"])
+                # even more flawed preprocessing :D
+                for key in self.database[0].keys():
+                    if str(self.database[-1][key]).isnumeric():
+                        self.database[-1][key] = int(self.database[-1][key])
+                    elif str(self.database[-1][key]).find("|") != -1:
+                        self.database[-1][key] = str(self.database[-1][key]).split("|")
         # sets the fields(keys) from the database
         if self.database:
             self.fields = self.database[0].keys()
@@ -25,6 +30,15 @@ class Database():
     # called automatically when the program finishes execution // saves the database to the file incase it has changed // do not call manually
     def __on_destroy(self):
         if self.database!=[]:
+            # preprocesses potential problem types (just lists for now (and not recursively or in a completely unflawed way) buuuuut, it should work for our use case soooooo)
+            lists = []
+            for key in self.fields:
+                if type(self.database[0][key]) == list: lists.append(key)
+            for i in range(len(self.database)):
+                for key in lists:
+                    self.database[i][key] = "|".join(self.database[i][key])
+                        
+
             with open(self.filepath, "w") as file:
                 writer = csv.DictWriter(file, fieldnames=self.fields)
                 writer.writeheader()
@@ -83,6 +97,7 @@ customers = Database("customers.csv")
 if __name__ == "__main__":
     print(stock)
     print(stock.search("Item", "Brio train set"))
+    print(customers)
     #stock.add(["test thing", "Toy", 5])
     #stock.edit("Item", "test thing", ["Price", "Category"], [10, "Toys"])
     #stock.remove("Item", "test thing")
