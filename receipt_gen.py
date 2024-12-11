@@ -54,7 +54,15 @@ def place_order(username):
             break
 
         if item in products:
-            quantity = int(input(f"How many {item}s would you like to order? "))
+            while True:
+                try:
+                    quantity = int(input(f"How many {item}s would you like to order? "))
+                    if quantity < 1:
+                        print("You must order at least 1 item. Please try again.")
+                    else:
+                        break
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
             
             # If the item is already in the order, update the quantity and total price
             if item in order_items:
@@ -74,33 +82,38 @@ def place_order(username):
 
 def login():
     print("Welcome to the system!")
-    user_type = input("Are you a customer or staff? ").lower()
+    
+    while True:
+        user_type = input("Are you a customer or staff? ").lower()
 
-    if user_type == 'customer':
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
-        
-        # Check if the username is valid and the password matches for the customer
-        for customer in customers.values():
-            if customer['username'] == username and customer['password'] == password:
-                print(f"Welcome, {username}! You have successfully logged in as a customer.")
-                place_order(username)  # Allow the customer to place an order
-                return
-        
-        print("Invalid username or password for customer. Please try again.")
-        
-    elif user_type == 'staff':
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
+        if user_type == 'customer':
+            while True:
+                username = input("Enter your username: ").lower()  # Convert to lowercase
+                password = input("Enter your password: ")
 
-        # Check if the username and password match for staff
-        if username == staff['username'] and password == staff['password']:
-            print("Welcome, staff! You have successfully logged in.")
-            return
+                # Check if the username is valid and the password matches for the customer
+                for customer in customers.values():
+                    if customer['username'].lower() == username and customer['password'] == password.lower():  # Convert stored username and password to lowercase
+                        print(f"Welcome, {username}! You have successfully logged in as a customer.")
+                        place_order(username)  # Allow the customer to place an order
+                        return
+
+                print("Invalid username or password for customer. Please try again.")
+        
+        elif user_type == 'staff':
+            while True:
+                username = input("Enter your username: ").lower()  # Convert to lowercase
+                password = input("Enter your password: ").lower()  # Convert to lowercase
+
+                # Check if the username and password match for staff
+                if staff['username'].lower() == username and staff['password'].lower() == password:
+                    print("Welcome, staff! You have successfully logged in.")
+                    return
+                else:
+                    print("Invalid username or password for staff. Please try again.")
+        
         else:
-            print("Invalid username or password for staff. Please try again.")
-    else:
-        print("Invalid user type. Please choose either 'customer' or 'staff'.")
+            print("Invalid user type. Please choose either 'customer' or 'staff'.")
 
 # Run the login function
 login()
