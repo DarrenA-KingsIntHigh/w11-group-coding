@@ -3,7 +3,7 @@
 import databases
 
 # Staff login details (shared for all staff)
-staff = {'username': 'staff_user', 'password': 'staffpassword'}
+staff = {'username': 'staff_user', 'password': 'staffpassword',"current_cart":["Chicco Crib"],"purchase_history":["Brio train set", "Paw Patrol tower", "Non existent item"]}
 
 def login():
     print("Welcome to the system!")
@@ -32,7 +32,7 @@ def login():
                 # Check if the username and password match for staff
                 if staff['username'].lower() == username and staff['password'] == password:
                     print("Welcome, staff! You have successfully logged in.")
-                    return [{"username":username, "password":password,"current_cart":["Chicco Crib"],"purchase_history":["Brio train set", "Paw Patrol tower", "Non existent item"]}]
+                    return [staff, True]
                 else:
                     print("Invalid username or password for staff. Please try again.")
         
