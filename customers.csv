@@ -1,4 +1,8 @@
-username,password,current_cart,purchase_history
-john,password,toy1|toy2,toy3|toy4
-jane,password,,
-alice,password,,
+username,password,current_cart,purchase_history
+
+john,password,,
+
+jane,password,,
+
+alice,password,,
+
