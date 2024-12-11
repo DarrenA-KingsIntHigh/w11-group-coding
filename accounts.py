@@ -18,7 +18,7 @@ def login():
 
                 # Check if the username is valid and the password matches for the customer
                 for customer in databases.customers:
-                    if customer['username'].lower() == username and customer['password'] == password:  # Convert stored username and password to lowercase
+                    if customer['username'].lower() == username.lower() and customer['password'] == password:  # Convert stored username and password to lowercase
                         input(f"Welcome, {username}! You have successfully logged in as a customer.\nHit ENTER: ")
                         return [customer, False]
 
@@ -30,11 +30,11 @@ def login():
                 password = input("Enter your password: ")
 
                 # Check if the username and password match for staff
-                if staff['username'].lower() == username and staff['password'] == password:
+                if staff['username'].lower() == username.lower() and staff['password'] == password:
                     print("Welcome, staff! You have successfully logged in.")
                     return [staff, True]
                 else:
-                    print("Invalid username or password for staff. Please try again.")
+                    print("Invalid user type. Please choose 'customer' or 'staff'.")
         
         else:
             print("Invalid user type. Please choose either 'customer' or 'staff'.")
