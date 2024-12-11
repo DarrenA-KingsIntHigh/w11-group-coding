@@ -7,32 +7,37 @@ staff = {'username': 'staff_user', 'password': 'staffpassword'}
 
 def login():
     print("Welcome to the system!")
-    user_type = input("Are you a customer or staff? ").lower()
+    
+    while True:
+        user_type = input("Are you a customer or staff? ").lower()
 
-    if user_type == 'customer':
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
-        
-        # Check if the username is valid and the password matches for the customer
-        for customer in databases.customers:
-            if customer['username'] == username and customer['password'] == password:
-                print(f"Welcome, {username}! You have successfully logged in as a customer.")
-                return [customer,False]
-        
-        print("Invalid username or password for customer. Please try again.")
-        
-    elif user_type == 'staff':
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
+        if user_type == 'customer':
+            while True:
+                username = input("Enter your username: ").lower()  # Convert to lowercase
+                password = input("Enter your password: ")
 
-        # Check if the username and password match for staff
-        if username == staff['username'] and password == staff['password']:
-            print("Welcome, staff! You have successfully logged in.")
-            return [{"username":username},True]
+                # Check if the username is valid and the password matches for the customer
+                for customer in databases.customers:
+                    if customer['username'].lower() == username and customer['password'] == password:  # Convert stored username and password to lowercase
+                        input(f"Welcome, {username}! You have successfully logged in as a customer.\nHit ENTER: ")
+                        return [customer, False]
+
+                input("Invalid username or password for customer. Please try again: ")
+        
+        elif user_type == 'staff':
+            while True:
+                username = input("Enter your username: ").lower()  # Convert to lowercase
+                password = input("Enter your password: ")
+
+                # Check if the username and password match for staff
+                if staff['username'].lower() == username and staff['password'] == password:
+                    print("Welcome, staff! You have successfully logged in.")
+                    return [{"username":username, "password":password,"current_cart":["Chicco Crib"],"purchase_history":["Brio train set", "Paw Patrol tower", "Non existent item"]}]
+                else:
+                    print("Invalid username or password for staff. Please try again.")
+        
         else:
-            print("Invalid username or password for staff. Please try again.")
-    else:
-        print("Invalid user type. Please choose either 'customer' or 'staff'.")
+            print("Invalid user type. Please choose either 'customer' or 'staff'.")
 
 if __name__ == "__main__":
     # Run the login function
