@@ -34,5 +34,6 @@ def login():
     else:
         print("Invalid user type. Please choose either 'customer' or 'staff'.")
 
-# Run the login function
-login()
+if __name__ == "__main__":
+    # Run the login function
+    login()
