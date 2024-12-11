@@ -1,6 +1,12 @@
 # a lot of this functionality is implemented in database.py. If you want to take a look in there I've left some comments for documentation
 import databases # should import it unless there is another python module called databases I don't know about
 
+def staff():
+    pass
+
+def customer():
+    pass
+
 class ToyStore:
     def __init__(self):
         # In-memory storage for stock and customers
