@@ -23,7 +23,7 @@ def login():
         for customer in customers.values():
             if customer['username'] == username and customer['password'] == password:
                 print(f"Welcome, {username}! You have successfully logged in as a customer.")
-                return
+                return {"username":username,"staff":False}
         
         print("Invalid username or password for customer. Please try again.")
         
@@ -34,7 +34,7 @@ def login():
         # Check if the username and password match for staff
         if username == staff['username'] and password == staff['password']:
             print("Welcome, staff! You have successfully logged in.")
-            return
+            return {"username":username,"staff":True}
         else:
             print("Invalid username or password for staff. Please try again.")
     else:
