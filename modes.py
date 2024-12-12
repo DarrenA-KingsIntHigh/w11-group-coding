@@ -69,34 +69,34 @@ class ToyStore:
         receipt += "-------------------"
         return receipt
 
+if __name__ == "__main__":
+    # Program Workflow
+    store = ToyStore()
 
-# Program Workflow
-store = ToyStore()
+    # Adding stock items
+    store.add_stock_item("Brio Train Set", "Toys", 119)
+    store.add_stock_item("Paw Patrol Tower", "Toys", 159)
+    store.add_stock_item("Safari Animal Mobile", "Nursery", 30)
+    store.add_stock_item("Chicco Crib", "Nursery", 199)
 
-# Adding stock items
-store.add_stock_item("Brio Train Set", "Toys", 119)
-store.add_stock_item("Paw Patrol Tower", "Toys", 159)
-store.add_stock_item("Safari Animal Mobile", "Nursery", 30)
-store.add_stock_item("Chicco Crib", "Nursery", 199)
+    # Display all stock
+    print("All Stock:")
+    for item in store.get_all_stock():
+        print(f"ID: {item['id']}, Name: {item['name']}, Category: {item['category']}, Price: ${item['price']}")
 
-# Display all stock
-print("All Stock:")
-for item in store.get_all_stock():
-    print(f"ID: {item['id']}, Name: {item['name']}, Category: {item['category']}, Price: ${item['price']}")
+    # Search for an item
+    print("\nSearch Results for 'Toys':")
+    for item in store.search_stock("Toys"):
+        print(f"ID: {item['id']}, Name: {item['name']}, Price: ${item['price']}")
 
-# Search for an item
-print("\nSearch Results for 'Toys':")
-for item in store.search_stock("Toys"):
-    print(f"ID: {item['id']}, Name: {item['name']}, Price: ${item['price']}")
+    # Save a customer
+    store.save_customer("Alice Smith", "alice@example.com", ["Brio Train Set", "Paw Patrol Tower"])
 
-# Save a customer
-store.save_customer("Alice Smith", "alice@example.com", ["Brio Train Set", "Paw Patrol Tower"])
-
-# Generate a receipt
-purchased_items = [
-    {"name": "Brio Train Set", "category": "Toys", "price": 119},
-    {"name": "Safari Animal Mobile", "category": "Nursery", "price": 30},
-    {"name": "Chicco Crib", "category": "Nursery", "price": 199}
-]
-print("\nReceipt:")
-print(store.generate_receipt(purchased_items))
+    # Generate a receipt
+    purchased_items = [
+        {"name": "Brio Train Set", "category": "Toys", "price": 119},
+        {"name": "Safari Animal Mobile", "category": "Nursery", "price": 30},
+        {"name": "Chicco Crib", "category": "Nursery", "price": 199}
+    ]
+    print("\nReceipt:")
+    print(store.generate_receipt(purchased_items))
