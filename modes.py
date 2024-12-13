@@ -1,11 +1,69 @@
 # a lot of this functionality is implemented in database.py. If you want to take a look in there I've left some comments for documentation
 import databases # should import it unless there is another python module called databases I don't know about
+import receipt_gen
+import os
 
 def staff():
     pass
 
-def customer():
-    pass
+def customer(account):
+    bag = []
+    running = True
+    while running:
+        os.system('cls')
+        print(f"Welcome {account['username']} -------------------------------------------------------------------------------------")
+        action = input("Please select an action: display the catalogue(c), search(s), add item to bag(a), remove item from bag(r), show bag(b), checkout/pay(p), quit(q)\n: ").casefold()
+
+        match action:
+            case 'q': running = False; continue
+            case 'c': print(databases.stock); input("Press ENTER: "); continue
+            case 's':
+                stype = input("what type of search would you like to make: name(n), category(c)\n: ").casefold()
+                search = input("Please enter your search: ")
+                if stype == 'n': field = "Item"
+                elif stype == 'c': field = "Category"
+                else: input("Unrecognized search tye: "); continue
+                result = databases.stock.search(field, search)
+                for item in result:
+                    print(item["Item"],item["Category"],f"£{item['Price']}", sep=", ")
+                input("Press ENTER: "); continue
+            case 'a': 
+                search = input("Please enter the name of the item you wish to add: ")
+                result = (databases.stock.search("Item", search))[0]
+                quantity = int(input("Please enter the amount of that item you wish to add: "))
+                exists = False
+                for item in bag:
+                    if item["Item"] == result:
+                        item["Quantity"] += quantity
+                        exists = True
+                        break
+                if not exists: bag.append({"Quantity":quantity,"Item":result})
+                print("Item added to bag")
+                input("Press ENTER: "); continue
+            case 'r':
+                print("bag: ")
+                for i, item in enumerate(bag):
+                    print(f"\t{i}: {str(item['Quantity'])}x\t{item['Item']['Item']}\t£{int(item['Item']['Price'])*item['Quantity']}")
+                index = int(input("please enter the id of the item you wish to remove: "))
+                if index >= 0 and index < len(bag):
+                    amount = int(input("how many of that item do you wish to remove?: "))
+                    if amount >= bag[index]["Quantity"]:
+                        bag.remove(bag[index])
+                    else: bag[index]["Quantity"] -= amount
+                    input("Item(s) removed\nHit ENTER: "); continue
+                else: input("Invalid id\nHit ENTER: "); continue
+                
+            case 'b':
+                for item in bag:
+                    print(str(item["Quantity"])+"x\t"+item["Item"]["Item"]+f"\t£{int(item["Item"]['Price'])*item["Quantity"]}")
+                input("Press ENTER: "); continue
+            case 'p': 
+                proceed = input("are you sure you want to check out? y/n: ").casefold()
+                if proceed == 'n': continue
+
+                receipt_gen.generate_receipt(bag)
+                input("Press ENTER: "); running = False; continue
+            case _: input("Unrecognized action: "); continue
 
 class ToyStore:
     def __init__(self):

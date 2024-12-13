@@ -21,14 +21,34 @@ products = {
 
 # Function to generate a receipt for the customer's order and save to a text file
 def generate_receipt(order_items):
-    total = sum(order_items[item]['total_price'] for item in order_items)
-    receipt_content = "--- Receipt ---\n"
+    total = sum(item["Quantity"]*int(item["Item"]["Price"]) for item in order_items)
+    toys_total = 0
+    nursery_total = 0
+    receipt_content = "--- Receipt ---\n\n"
     
-    for item, details in order_items.items():
-        receipt_content += f"{item} (x{details['quantity']}): ${details['total_price']:.2f}\n"
+    for item in order_items:
+        receipt_content += f"{item["Item"]["Item"]} (x{item['Quantity']}): £{int(item['Item']['Price'])*item['Quantity']:.2f}\n"
+        if item["Item"]["Category"] == "Toys":
+            toys_total += int(item['Item']['Price'])*item['Quantity']
+        elif item["Item"]["Category"] == "Nursery":
+            nursery_total += int(item['Item']['Price'])*item['Quantity']
     
-    receipt_content += "----------------\n"
-    receipt_content += f"Total: ${total:.2f}\n"
+    receipt_content += "\n----------------\n\n"
+    receipt_content += f"Subtotal: £{total:.2f}\n"
+    receipt_content += "Applicable Discounts:\n"
+    has_discounts = False
+    discount_modifier = 1
+    if toys_total > 100:
+        receipt_content += f"\tToys over 100: 10% off\n"
+        discount_modifier = 0.900000
+    if nursery_total > 200:
+        receipt_content += f"\tNursery items over 200: 15% off\n"
+        discount_modifier = 0.850000
+    if toys_total > 100 or nursery_total > 200:
+        receipt_content += "\nApplying highest discount\n\n"
+        total *= discount_modifier
+    else: receipt_content += "\tNone\n\n"
+    receipt_content += f"Total: £{total:.2f}\n"
     receipt_content += "Thank you for your order!\n"
 
     # Save the receipt to a text file
@@ -36,7 +56,6 @@ def generate_receipt(order_items):
         file.write(receipt_content)
     
     # Print the receipt to the console
-    print("\n--- Receipt ---")
     print(receipt_content)
 
 def place_order(username):
@@ -115,5 +134,6 @@ def login():
         else:
             print("Invalid user type. Please choose either 'customer' or 'staff'.")
 
-# Run the login function
-login()
+if __name__ == "__main__":
+    # Run the login function
+    login()

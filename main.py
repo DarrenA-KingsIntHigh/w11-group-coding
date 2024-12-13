@@ -20,9 +20,9 @@ def main():
     
     input(f"Welcome, {account_info[0]['username']}! You have successfully logged.\nHit ENTER: ")
     if account_info[1] == True:
-        modes.staff()
+        modes.staff(account_info[0])
     else: 
-        modes.customer()
+        modes.customer(account_info[0])
 
 if __name__ == "__main__":
     main()
