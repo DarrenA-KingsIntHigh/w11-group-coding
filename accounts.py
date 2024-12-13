@@ -10,15 +10,15 @@ class AccountErrorTypes(enum.Enum):
 staff_account = {'username': 'staff_user', 'password': 'staffpassword',"current_cart":["Chicco Crib"],"purchase_history":["Brio train set", "Paw Patrol tower", "Non existent item"]}
 
 def login(username, password):    
+    # Checks for staff user
+    if staff_account['username'].lower() == username.lower() and staff_account['password'] == password:
+        return [staff_account, True]
+    
     # Check if the username is valid and the password matches for the customer
     for customer in databases.customers.database:
         if customer['username'].lower() == username.lower() and customer['password'] == password:  # Convert stored username to lowercase
             return [customer, False]
     
-    # does the same for staff
-    if staff_account['username'].lower() == username.lower() and staff_account['password'] == password:
-        return [staff_account, True]
-
     return [None, AccountErrorTypes.UNRECOGNISED_ACCOUNT]
 
 if __name__ == "__main__":
